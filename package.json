@@ -1,0 +1,19 @@
+{
+  "author": "W. Cole Davis <cole@xtuple.com>",
+  "name": "router",
+  "description": "Proxy service for xTuple cloud stack",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/clinuz/node-router.git"
+  },
+  "main": "main.js",
+  "dependencies": {
+    "xt": "git://github.com/clinuz/node-xt.git"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
