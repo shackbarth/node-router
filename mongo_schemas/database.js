@@ -3,7 +3,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true */
 
 XT.MongooseSchema.create({
-  name: "Database",
+  name: "DatabaseServer",
   definition: {
     name:         {type: String, index: {unique: true}},
     hostname:     {type: String, index: {unique: true}}, 
@@ -11,6 +11,7 @@ XT.MongooseSchema.create({
     description:  {type: String},
     location:     {type: String},
     dateAdded:    {type: Date},
-    password:     {type: String}
+    password:     {type: String},
+    user:         {type: String}
   }
 });
