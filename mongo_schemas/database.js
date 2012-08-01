@@ -10,6 +10,7 @@ XT.MongooseSchema.create({
     port:         {type: Number},
     description:  {type: String},
     location:     {type: String},
-    dateAdded:    {type: Date}
+    dateAdded:    {type: Date},
+    password:     {type: String}
   }
 });
