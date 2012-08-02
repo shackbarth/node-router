@@ -68,11 +68,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 
 /* line 9, ../sass/screen.scss */
+input {
+  width: 280px;
+}
+
+/* line 13, ../sass/screen.scss */
 .administravia {
   position: relative;
   display: block;
 }
-/* line 12, ../sass/screen.scss */
+/* line 16, ../sass/screen.scss */
 .administravia .entity {
   position: relative;
   -moz-box-sizing: border-box;
@@ -85,11 +90,11 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   padding: 20px;
   margin: 25px 0;
 }
-/* line 20, ../sass/screen.scss */
+/* line 24, ../sass/screen.scss */
 .administravia .entity .administravia-list {
   height: 360px;
 }
-/* line 23, ../sass/screen.scss */
+/* line 27, ../sass/screen.scss */
 .administravia .entity .title {
   position: absolute;
   top: 20px;
@@ -99,30 +104,99 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   font-size: 26px;
   padding: 5px;
 }
-/* line 32, ../sass/screen.scss */
+/* line 36, ../sass/screen.scss */
 .administravia .entity .administravia-list {
   background-color: #444;
   width: 350px;
   position: absolute;
   right: 20px;
 }
-/* line 38, ../sass/screen.scss */
+/* line 41, ../sass/screen.scss */
+.administravia .entity .administravia-list .organization-list-item {
+  background-color: #777;
+  color: #fff;
+  padding: 10px;
+  font-size: 10px;
+  margin-bottom: 2px;
+  overflow-x: hidden;
+}
+/* line 48, ../sass/screen.scss */
+.administravia .entity .administravia-list .organization-list-item div {
+  display: inline-block;
+}
+/* line 51, ../sass/screen.scss */
+.administravia .entity .administravia-list .organization-list-item:hover {
+  cursor: pointer;
+  background-color: #666;
+}
+/* line 55, ../sass/screen.scss */
+.administravia .entity .administravia-list .organization-list-item .name {
+  font-weight: bold;
+  width: 80px;
+}
+/* line 62, ../sass/screen.scss */
+.administravia .entity .administravia-list .database-list-item {
+  background-color: #777;
+  color: #fff;
+  padding: 10px;
+  font-size: 10px;
+  margin-bottom: 2px;
+  overflow-x: hidden;
+}
+/* line 69, ../sass/screen.scss */
+.administravia .entity .administravia-list .database-list-item div {
+  display: inline-block;
+}
+/* line 72, ../sass/screen.scss */
+.administravia .entity .administravia-list .database-list-item:hover {
+  cursor: pointer;
+  background-color: #666;
+}
+/* line 76, ../sass/screen.scss */
+.administravia .entity .administravia-list .database-list-item .name {
+  font-weight: bold;
+  width: 80px;
+}
+/* line 83, ../sass/screen.scss */
+.administravia .entity .administravia-list .user-list-item {
+  background-color: #777;
+  color: #fff;
+  padding: 10px;
+  font-size: 10px;
+  margin-bottom: 2px;
+  overflow-x: hidden;
+}
+/* line 90, ../sass/screen.scss */
+.administravia .entity .administravia-list .user-list-item div {
+  display: inline-block;
+}
+/* line 93, ../sass/screen.scss */
+.administravia .entity .administravia-list .user-list-item:hover {
+  cursor: pointer;
+  background-color: #666;
+}
+/* line 97, ../sass/screen.scss */
+.administravia .entity .administravia-list .user-list-item .id {
+  font-weight: bold;
+  width: 80px;
+}
+/* line 103, ../sass/screen.scss */
 .administravia .entity .editor {
   width: 300px;
   position: absolute;
   left: 20px;
   top: 61px;
 }
-/* line 43, ../sass/screen.scss */
+/* line 108, ../sass/screen.scss */
 .administravia .entity .editor label {
   background-color: #eee;
 }
-/* line 47, ../sass/screen.scss */
+/* line 112, ../sass/screen.scss */
 .administravia .entity .controls {
   position: absolute;
   left: 340px;
 }
-/* line 50, ../sass/screen.scss */
+/* line 115, ../sass/screen.scss */
 .administravia .entity .controls .onyx-button {
   width: 100px;
 }
