@@ -30,7 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   require("../lib/proxy_cache");
 
-  var K = XT.proxyCache.model("Database"), k;
+  var K = XT.proxyCache.model("DatabaseServer"), k;
   k = new K({
     name: "dev1",
     hostname: "localhost",
