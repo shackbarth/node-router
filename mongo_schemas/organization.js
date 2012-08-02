@@ -5,9 +5,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 XT.MongooseSchema.create({
   name: "Organization",
   definition: {
-    name:         {type: String, index: {unique: true}},
-    database:     {type: String, required: true}, // maps to database name entry
-    description:  {type: String},
-    cloud:        {type: String} // TODO: eventually we should track instances too
+    name:           {type: String, index: {unique: true}},
+    databaseServer: {type: String, required: true}, // maps to database name entry
+    description:    {type: String},
+    cloud:          {type: String} // TODO: eventually we should track instances too
   }
 });

@@ -25,9 +25,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     proxy: {
       port: 9000
+    },
+    administratorInterface: {
+      port: 9090
     }
   });
 
   require("./lib/proxy_cache");
   require("./lib/proxy_service");
+  require("./lib/administravia");
 }());
