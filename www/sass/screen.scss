@@ -6,6 +6,10 @@
 @import "compass/reset";
 @import "compass/css3/box-sizing";
 
+input {
+  width: 280px;
+}
+
 .administravia {
   position: relative;
   display: block;
@@ -34,6 +38,67 @@
       width: 350px;
       position: absolute;
       right: 20px;
+      .organization-list-item {
+        background-color: #777;
+        color: #fff;
+        padding: 10px;
+        font-size: 10px;
+        margin-bottom: 2px;
+        overflow-x: hidden;
+        div {
+          display: inline-block;
+        }
+        &:hover {
+          cursor: pointer;
+          background-color: #666;
+        }
+        .name {
+          font-weight: bold;
+          width: 80px;
+        }
+        .description {
+        }
+      }
+      .database-list-item {
+        background-color: #777;
+        color: #fff;
+        padding: 10px;
+        font-size: 10px;
+        margin-bottom: 2px;
+        overflow-x: hidden;
+        div {
+          display: inline-block;
+        }
+        &:hover {
+          cursor: pointer;
+          background-color: #666;
+        }
+        .name {
+          font-weight: bold;
+          width: 80px;
+        }
+        .description {
+        }
+      }
+      .user-list-item {
+        background-color: #777;
+        color: #fff;
+        padding: 10px;
+        font-size: 10px;
+        margin-bottom: 2px;
+        overflow-x: hidden;
+        div {
+          display: inline-block;
+        }
+        &:hover {
+          cursor: pointer;
+          background-color: #666;
+        }
+        .id {
+          font-weight: bold;
+          width: 80px;
+        }
+      }
     }
     .editor {
       width: 300px;
