@@ -17,6 +17,17 @@ enyo.kind({
 enyo.kind({
   name: "Entity",
   classes: "entity onyx",
+  handlers: {
+    onPopulate: "populate",
+    onNewTapped: "clear",
+    onSaveTapped: "save",
+    onDeleteTapped: "deleteEntry",
+    onEnableSave: "enableSave",
+    onDisableSave: "disableSave",
+    onEnableDelete: "enableDelete",
+    onDisableDelete: "disableDelete",
+    onResetList: "resetList"
+  },
   create: function () {
     this.inherited(arguments);
     this.createComponent({
@@ -24,6 +35,33 @@ enyo.kind({
       content: this.title,
       classes: "title"
     });
+  },
+  populate: function (ignore, obj) {
+    this.$.editor.populate(obj);
+  },
+  clear: function () {
+    this.$.editor.clear();
+  },
+  save: function () {
+    this.$.editor.save();
+  },
+  enableSave: function () {
+    this.$.controls.enableSave();
+  },
+  disableSave: function () {
+    this.$.controls.disableSave();
+  },
+  enableDelete: function () {
+    this.$.controls.enableDelete();
+  },
+  disableDelete: function () {
+    this.$.controls.disableDelete();
+  },
+  resetList: function () {
+    this.$.list.lookup();
+  },
+  deleteEntry: function () {
+    this.$.editor.deleteEntry();
   }
 });
 
@@ -34,14 +72,89 @@ enyo.kind({
   handlers: {
     onSetupItem: "setupItem"
   },
-  components: [
-    {name: "item"}
-  ]
+  published: {
+    contentArray: null
+  },
+  rowTapped: function (row, evt) {
+    var idx = evt.index, c = this.getContentArray();
+    this.bubble("onPopulate", c[idx]);
+  },
+  contentArrayChanged: function () {
+    var c = this.getContentArray();
+    this.setCount(c.length);
+    this.reset();
+  },
+  lookup: function () {
+    var handler = this.lookupHandler, x = new enyo.Ajax({
+      url: handler,
+      method: "POST"
+    });
+    x.go();
+    x.response(this, "didReceiveResponse");
+  },
+  create: function () {
+    this.inherited(arguments);
+    this.lookup();
+  },
+  didReceiveResponse: function (ignore, result) {
+    this.setContentArray(result);
+  }
 });
 
 enyo.kind({
   name: "Editor",
-  classes: "editor"
+  classes: "editor",
+  populate: function (obj) {
+    this.clear();
+    for (var k in obj) {
+      if (!obj.hasOwnProperty(k)) continue;
+      if (this.$[k]) {
+        this.$[k].setValue(obj[k]);
+      }
+    }
+    this.bubble("onEnableSave");
+    this.bubble("onEnableDelete");
+  },
+  clear: function () {
+    for (var k in this.$) {
+      if (!this.$.hasOwnProperty(k)) continue;
+      if (this.$[k].kind === "onyx.Input") this.$[k].setValue("");
+    }
+  },
+  getContent: function () {
+    var ret = {}, k;
+    for (k in this.$) {
+      if (!this.$.hasOwnProperty(k)) continue;
+      if (this.$[k].kind === "onyx.Input") ret[k] = this.$[k].getValue();
+    }
+    return ret;
+  },
+  save: function () {
+    var handler = this.saveHandler, content = this.getContent(), x;
+    x = new enyo.Ajax({
+      url: handler,
+      method: "POST"
+    });
+    x.go(JSON.stringify(content));
+    x.response(this, "didReceiveResponse");
+  },
+  deleteEntry: function () {
+    var handler = this.deleteHandler, content = this.getContent(), x;
+    x = new enyo.Ajax({
+      url: handler,
+      method: "POST"
+    });
+    x.go(JSON.stringify(content));
+    x.response(this, "didReceiveResponse");
+  },
+  didReceiveResponse: function (ignore, result) {
+    if (result && result.isError) {
+      console.warn("ERROR: ", result.reason);
+    } else {
+      this.clear();
+      this.bubble("onResetList");
+    }
+  }
 });
 
 enyo.kind({
@@ -81,47 +194,78 @@ enyo.kind({
 });
 
 enyo.kind({
+  name: "DatabaseListItem",
+  classes: "database-list-item",
+  components: [
+    {name: "name", classes: "name"},
+    {name: "description", classes: "description"}
+  ]
+});
+
+enyo.kind({
+  name: "OrganizationListItem",
+  classes: "database-list-item",
+  components: [
+    {name: "name", classes: "name"},
+    {name: "description", classes: "description"}
+  ]
+});
+
+enyo.kind({
+  name: "UserListItem",
+  classes: "user-list-item",
+  components: [
+    {name: "id", classes: "id"}
+  ]
+});
+
+enyo.kind({
   name: "DatabaseList",
   kind: "AdministraviaList",
-  count: 100,
   setupItem: function (inSender, inEvent) {
-    this.$.item.setContent("YOYO YO OY OYOYOYOYOYOYOYO");
+    var idx = inEvent.index, c = this.getContentArray();
+    this.$.item.$.name.setContent(c[idx].name);
+    this.$.item.$.description.setContent(c[idx].description);
   },
-  create: function () {
-    this.inherited(arguments);
-    this.reset();
-  }
+  components: [
+    {name: "item", kind: "DatabaseListItem", ontap: "rowTapped"}
+  ],
+  lookupHandler: "lookup/databases"
 });
 
 enyo.kind({
   name: "UserList",
   kind: "AdministraviaList",
-  count: 100,
   setupItem: function (inSender, inEvent) {
-    this.$.item.setContent("YOYO YO OY OYOYOYOYOYOYOYO");
+    var idx = inEvent.index, c = this.getContentArray();
+    this.$.item.$.id.setContent(c[idx].id);
   },
-  create: function () {
-    this.inherited(arguments);
-    this.reset();
-  }
+  components: [
+    {name: "item", kind: "UserListItem", ontap: "rowTapped"}
+  ],
+  lookupHandler: "lookup/users"
 });
+
 
 enyo.kind({
   name: "OrganizationList",
   kind: "AdministraviaList",
-  count: 100,
   setupItem: function (inSender, inEvent) {
-    this.$.item.setContent("YOYO YO OY OYOYOYOYOYOYOYO");
+    var idx = inEvent.index, c = this.getContentArray();
+    this.$.item.$.name.setContent(c[idx].name);
+    this.$.item.$.description.setContent(c[idx].description);
   },
-  create: function () {
-    this.inherited(arguments);
-    this.reset();
-  }
+  components: [
+    {name: "item", kind: "OrganizationListItem", ontap: "rowTapped"}
+  ],
+  lookupHandler: "lookup/organizations"
 });
 
 enyo.kind({
   name: "DatabaseEditor",
   kind: "Editor",
+  saveHandler: "/save/database",
+  deleteHandler: "/delete/database",
   components: [
     {name: "box", kind: "onyx.Groupbox", components: [
       {name: "header", kind: "onyx.GroupboxHeader", content: "Database Server"},
@@ -143,6 +287,8 @@ enyo.kind({
 enyo.kind({
   name: "UserEditor",
   kind: "Editor",
+  saveHandler: "/save/user",
+  deleteHandler: "/delete/user",
   components: [
     {name: "box", kind: "onyx.Groupbox", components: [
       {name: "header", kind: "onyx.GroupboxHeader", content: "User"},
@@ -152,12 +298,28 @@ enyo.kind({
         {name: "password", kind: "onyx.Input", type: "password", placeholder: "Password"}]},
       {kind: "onyx.InputDecorator", components: [
         {name: "organizations", kind: "onyx.Input", placeholder: "Organizations"}]}]}
-  ]
+  ],
+  populate: function (obj) {
+    delete obj.password;
+    this.clear();
+    for (var k in obj) {
+      if (!obj.hasOwnProperty(k)) continue;
+      if (this.$[k]) {
+        if (k === "organizations") {
+          this.$[k].setValue(_.map(obj[k], function (entry) { return "%@:%@".f(entry.name, entry.username); }).join(", "));
+        } else this.$[k].setValue(obj[k]);
+      }
+    }
+    this.bubble("onEnableSave");
+    this.bubble("onEnableDelete");
+  }
 });
 
 enyo.kind({
   name: "OrganizationEditor",
   kind: "Editor",
+  saveHandler: "/save/organization",
+  deleteHandler: "/delete/organization",
   components: [
     {name: "box", kind: "onyx.Groupbox", components: [
       {name: "header", kind: "onyx.GroupboxHeader", content: "Organization"},
@@ -175,10 +337,38 @@ enyo.kind({
 enyo.kind({
   name: "Controls",
   classes: "controls",
+  newTapped: function () {
+    this.bubble("onNewTapped");
+    this.enableSave();
+    this.disableDelete();
+  },
+  saveTapped: function () {
+    this.bubble("onSaveTapped");
+    this.disableSave();
+    this.disableDelete();
+  },
+  deleteTapped: function () {
+    this.bubble("onDeleteTapped");
+    this.disableSave();
+    this.disableDelete();
+  },
+  enableSave: function () {
+    this.$.save.setDisabled(false);
+  },
+  disableSave: function () {
+    this.$.save.setDisabled(true);
+  },
+  disableDelete: function () {
+    this.$.delete.setDisabled(true);
+  },
+  enableDelete: function () {
+    this.$.delete.setDisabled(false);
+  },
   components: [
     {name: "box", kind: "onyx.Groupbox", components: [
-      {name: "new", kind: "onyx.Button", content: "New"},
-      {name: "save", kind: "onyx.Button", content: "Save", disabled: true}]}
+      {name: "new", kind: "onyx.Button", content: "New", ontap: "newTapped"},
+      {name: "save", kind: "onyx.Button", content: "Save", disabled: true, ontap: "saveTapped"},
+      {name: "delete", kind: "onyx.Button", content: "Delete", disabled: true, ontap: "deleteTapped"}]}
   ]
 });
 

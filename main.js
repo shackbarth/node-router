@@ -15,12 +15,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     requireServer: true,
     debugging: true,
     routesDirectory: "./lib/routes",
+    secureSaltFile: "../node-datasource/lib/private/salt.txt",
     cache: {
       proxy: {
         hostname: "localhost",
         port: 27017,
-        schemaDirectory: "./mongo_schemas",
+        schemaDirectory: "./mongo_schemas/proxy",
         database: "xtproxy"
+      },
+      user: {
+        hostname: "localhost",
+        port: 27017,
+        schemaDirectory: "./mongo_schemas/users",
+        database: "xtusers"
       }
     },
     proxy: {
