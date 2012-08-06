@@ -4,9 +4,6 @@ enyo.kind({
   classes: "administravia onyx",
   fit: true,
   kind: "Scroller",
-  start: function () {
-    this.renderInto(document.body);
-  },
   components: [
     {name: "databases", kind: "Databases"},
     {name: "users", kind: "Users"},
