@@ -1,8 +1,8 @@
 enyo.depends(
   "$lib/onyx",
   "$lib/layout",
-  "$lib/underscore",
-  "client/xt",
+  "../../../client/lib/underscore/underscore-min.js",
+  "../../../client/source/xt",
   "stylesheets/screen.css",
   "app.js"
 );

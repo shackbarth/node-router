@@ -4,9 +4,6 @@ enyo.kind({
   classes: "administravia onyx",
   fit: true,
   kind: "Scroller",
-  start: function () {
-    this.renderInto(document.body);
-  },
   components: [
     {name: "databases", kind: "Databases"},
     {name: "users", kind: "Users"},
@@ -104,6 +101,10 @@ enyo.kind({
 enyo.kind({
   name: "Editor",
   classes: "editor",
+  fieldChanged: function () {
+    if (this.noContent()) this.bubble("onDisableSave");
+    else this.bubble("onEnableSave");
+  },
   populate: function (obj) {
     this.clear();
     for (var k in obj) {
@@ -120,6 +121,14 @@ enyo.kind({
       if (!this.$.hasOwnProperty(k)) continue;
       if (this.$[k].kind === "onyx.Input") this.$[k].setValue("");
     }
+  },
+  noContent: function () {
+    var c = this.getContent(), k;
+    for (k in c) {
+      if (!c.hasOwnProperty(k)) continue;
+      if (c[k] && c[k] !== "") return false;
+    }
+    return true;
   },
   getContent: function () {
     var ret = {}, k;
@@ -270,17 +279,17 @@ enyo.kind({
     {name: "box", kind: "onyx.Groupbox", components: [
       {name: "header", kind: "onyx.GroupboxHeader", content: "Database Server"},
       {kind: "onyx.InputDecorator", components: [
-        {name: "name", kind: "onyx.Input", placeholder: "Name"}]},
+        {name: "name", kind: "onyx.Input", placeholder: "Name", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "hostname", kind: "onyx.Input", placeholder: "Hostname"}]},
+        {name: "hostname", kind: "onyx.Input", placeholder: "Hostname", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "port", kind: "onyx.Input", placeholder: "Port"}]},
+        {name: "port", kind: "onyx.Input", placeholder: "Port", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "description", kind: "onyx.Input", placeholder: "Description"}]},
+        {name: "description", kind: "onyx.Input", placeholder: "Description", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "user", kind: "onyx.Input", placeholder: "User"}]},
+        {name: "user", kind: "onyx.Input", placeholder: "User", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "password", kind: "onyx.Input", type: "password", placeholder: "Password"}]}]}
+        {name: "password", kind: "onyx.Input", type: "password", placeholder: "Password", oninput: "fieldChanged"}]}]}
   ]
 });
 
@@ -293,11 +302,11 @@ enyo.kind({
     {name: "box", kind: "onyx.Groupbox", components: [
       {name: "header", kind: "onyx.GroupboxHeader", content: "User"},
       {kind: "onyx.InputDecorator", components: [
-        {name: "id", kind: "onyx.Input", placeholder: "ID (Email Address)"}]},
+        {name: "id", kind: "onyx.Input", placeholder: "ID (Email Address)", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "password", kind: "onyx.Input", type: "password", placeholder: "Password"}]},
+        {name: "password", kind: "onyx.Input", type: "password", placeholder: "Password", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "organizations", kind: "onyx.Input", placeholder: "Organizations"}]}]}
+        {name: "organizations", kind: "onyx.Input", placeholder: "Organizations", oninput: "fieldChanged"}]}]}
   ],
   populate: function (obj) {
     delete obj.password;
@@ -324,13 +333,13 @@ enyo.kind({
     {name: "box", kind: "onyx.Groupbox", components: [
       {name: "header", kind: "onyx.GroupboxHeader", content: "Organization"},
       {kind: "onyx.InputDecorator", components: [
-        {name: "name", kind: "onyx.Input", placeholder: "Name"}]},
+        {name: "name", kind: "onyx.Input", placeholder: "Name", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "databaseServer", kind: "onyx.Input", placeholder: "Database Server"}]},
+        {name: "databaseServer", kind: "onyx.Input", placeholder: "Database Server", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "description", kind: "onyx.Input", placeholder: "Description"}]},
+        {name: "description", kind: "onyx.Input", placeholder: "Description", oninput: "fieldChanged"}]},
       {kind: "onyx.InputDecorator", components: [
-        {name: "cloud", kind: "onyx.Input", placeholder: "Cloud Instance"}]}]}
+        {name: "cloud", kind: "onyx.Input", placeholder: "Cloud Instance", oninput: "fieldChanged"}]}]}
   ]
 });
 
