@@ -2993,22 +2993,22 @@ return this._wrapped;
 
 // foundation.js
 
-XT = {
+X = {
 MONEY_SCALE: 2,
 QTY_SCALE: 6,
 QTY_PER_SCALE: 7,
 COST_SCALE: 6,
 SALES_PRICE_SCALE: 4,
 PURCHASE_PRICE_SCALE: 6,
-EXTENDED_PRICE_SCALE: 4,
+EXENDED_PRICE_SCALE: 4,
 UNIT_RATIO_SCALE: 8,
 PERCENT_SCALE: 4,
 WEIGHT_SCALE: 2
-}, XM = {}, _.extend(XT, {
+}, XM = {}, _.extend(X, {
 K: function() {},
 _date: new Date,
 toReadableTimestamp: function(a) {
-var b = XT._date || (XT._date = new Date);
+var b = X._date || (X._date = new Date);
 return b.setTime(a), b.toLocaleTimeString();
 },
 getObjectByName: function(a) {
@@ -3031,7 +3031,7 @@ return b;
 }
 return _.values(a);
 }
-}), XT.$A = XT.A, _.extend(XT, {
+}), X.$A = X.A, _.extend(X, {
 history: [],
 addToHistory: function(a, b) {
 for (var c = 0; c < this.history.length; c++) this.history[c].modelType === b.recordType && this.history[c].modelId === b.get("id") && (this.history.splice(c, 1), c--);
@@ -3050,7 +3050,7 @@ return this.history;
 // error.js
 
 (function() {
-"use strict", XT.Error = function() {}, XT.Error.prototype = {
+"use strict", X.Error = function() {}, X.Error.prototype = {
 code: null,
 messageKey: null,
 params: {},
@@ -3059,21 +3059,21 @@ var a = (this.messageKey || "").loc(), b, c;
 for (b in this.params) this.params.hasOwnProperty(b) && (c = (this.params[b] || "_unknown").loc(), a = a.replace("{" + b + "}", c));
 return a;
 }
-}, _.extend(XT.Error, {
+}, _.extend(X.Error, {
 clone: function(a, b) {
 var c;
 b = b || {};
 if (a) {
-c = _.find(XT.errors, function(b) {
+c = _.find(X.errors, function(b) {
 return b.code === a;
 });
 if (!c) return !1;
 }
-return c = _.clone(c), c.params && (c.params = _.clone(c.params)), _.extend(c, b), XT.Error.create(c);
+return c = _.clone(c), c.params && (c.params = _.clone(c.params)), _.extend(c, b), X.Error.create(c);
 },
 create: function(a) {
 var b;
-return a = a || {}, b = new XT.Error, _.extend(b, a), b;
+return a = a || {}, b = new X.Error, _.extend(b, a), b;
 }
 });
 var a = [ {
@@ -3149,23 +3149,23 @@ messageKey: "_productCategoryRequiredOnSold"
 code: "xt2006",
 messageKey: "_recursiveParentDisallowed"
 } ];
-XT.errors = [], _.each(a, function(a) {
-var b = XT.Error.create(a);
-XT.errors.push(b);
+X.errors = [], _.each(a, function(a) {
+var b = X.Error.create(a);
+X.errors.push(b);
 });
 })();
 
 // log.js
 
-XT.log = function() {
-var a = XT.$A(arguments);
+X.log = function() {
+var a = X.$A(arguments);
 console.log.apply ? console.log.apply(console, a) : console.log(a.join(" "));
 };
 
 // datasource.js
 
 (function() {
-"use strict", XT.dataSource = {
+"use strict", X.dataSource = {
 datasourceUrl: document.location.hostname,
 datasourcePort: 443,
 isConnected: !1,
@@ -3174,51 +3174,51 @@ a = a ? _.clone(a) : {};
 var b = this, c = {}, d = a.query.parameters, e, f = function(c) {
 var d, e = {}, f;
 if (c.isError) {
-a && a.error && (e.error = c.reason.data.code, f = XT.Error.clone("xt1001", {
+a && a.error && (e.error = c.reason.data.code, f = X.Error.clone("xt1001", {
 params: e
 }), a.error.call(b, f));
 return;
 }
 d = JSON.parse(c.data.rows[0].fetch), a && a.success && a.success.call(b, d);
 }, g = function(b) {
-var c = a.query.recordType, d = c ? XT.getObjectByName(c) : null, e = d ? d.prototype.relations : [], f = _.find(e, function(a) {
+var c = a.query.recordType, d = c ? X.getObjectByName(c) : null, e = d ? d.prototype.relations : [], f = _.find(e, function(a) {
 return a.key === b.attribute;
 }), g;
-b.value instanceof Date ? b.value = b.value.toJSON() : b.value instanceof XM.Model && (b.value = b.value.id), f && f.type === Backbone.HasOne && f.includeInJSON === !0 && (d = XT.getObjectByName(f.relatedModel), g = d.prototype.idAttribute, b.attribute = b.attribute + "." + g);
+b.value instanceof Date ? b.value = b.value.toJSON() : b.value instanceof XM.Model && (b.value = b.value.id), f && f.type === Backbone.HasOne && f.includeInJSON === !0 && (d = X.getObjectByName(f.relatedModel), g = d.prototype.idAttribute, b.attribute = b.attribute + "." + g);
 };
 for (e in d) g(d[e]);
-return c.requestType = "fetch", c.query = a.query, XT.Request.handle("function/fetch").notify(f).send(c);
+return c.requestType = "fetch", c.query = a.query, X.Request.handle("function/fetch").notify(f).send(c);
 },
 retrieveRecord: function(a, b, c) {
 var d = this, e = {}, f = function(a) {
 var b, e = {}, f;
 if (a.isError) {
-c && c.error && (e.error = a.reason.data.code, f = XT.Error.clone("xt1001", {
+c && c.error && (e.error = a.reason.data.code, f = X.Error.clone("xt1001", {
 params: e
 }), c.error.call(d, f));
 return;
 }
 b = JSON.parse(a.data.rows[0].retrieve_record);
 if (_.isEmpty(b)) {
-c && c.error && (f = XT.Error.clone("xt1007"), c.error.call(d, f));
+c && c.error && (f = X.Error.clone("xt1007"), c.error.call(d, f));
 return;
 }
 c && c.success && c.success.call(d, b);
 };
-return e.requestType = "retrieveRecord", e.recordType = a, e.id = b, XT.Request.handle("function/retrieveRecord").notify(f).send(e);
+return e.requestType = "retrieveRecord", e.recordType = a, e.id = b, X.Request.handle("function/retrieveRecord").notify(f).send(e);
 },
 commitRecord: function(a, b) {
 var c = this, d = {}, e = function(a) {
 var d, e = {}, f;
 if (a.isError) {
-b && b.error && (e.error = a.reason.data.code, f = XT.Error.clone("xt1001", {
+b && b.error && (e.error = a.reason.data.code, f = X.Error.clone("xt1001", {
 params: e
 }), b.error.call(c, f));
 return;
 }
 d = JSON.parse(a.data.rows[0].commit_record), b && b.success && b.success.call(c, d);
 };
-return d.requestType = "commitRecord", d.recordType = a.recordType, d.requery = b.requery, d.dataHash = a.changeSet(), XT.Request.handle("function/commitRecord").notify(e).send(d);
+return d.requestType = "commitRecord", d.recordType = a.recordType, d.requery = b.requery, d.dataHash = a.changeSet(), X.Request.handle("function/commitRecord").notify(e).send(d);
 },
 dispatch: function(a, b, c, d) {
 var e = this, f = {
@@ -3229,21 +3229,21 @@ parameters: c
 }, g = function(a) {
 var b, c = {}, f;
 if (a.isError) {
-d && d.error && (c.error = a.reason.data.code, f = XT.Error.clone("xt1001", {
+d && d.error && (c.error = a.reason.data.code, f = X.Error.clone("xt1001", {
 params: c
 }), d.error.call(e, f));
 return;
 }
 b = JSON.parse(a.data.rows[0].dispatch), d && d.success && d.success.call(e, b);
 };
-return XT.Request.handle("function/dispatch").notify(g).send(f);
+return X.Request.handle("function/dispatch").notify(g).send(f);
 },
 connect: function(a) {
 if (this.isConnected) {
 a && a instanceof Function && a();
 return;
 }
-XT.log("Attempting to connect to the datasource");
+X.log("Attempting to connect to the datasource");
 var b = this.datasourceUrl, c = this.datasourcePort, d = "https://%@/clientsock".f(b), e = this, f = this.sockDidConnect, g = this.sockDidError;
 this._sock = io.connect(d, {
 port: c,
@@ -3253,14 +3253,14 @@ f.call(e, a);
 }), this._sock.on("error", function(b) {
 g.call(e, b, a);
 }), this._sock.on("debug", function(a) {
-XT.log("SERVER DEBUG => ", a);
+X.log("SERVER DEBUG => ", a);
 });
 },
 sockDidError: function(a, b) {
 console.warn(a), b && b instanceof Function && b(a);
 },
 sockDidConnect: function(a) {
-XT.log("Successfully connected to the datasource"), this.isConnected = !0, XT.session || (XT.session = Object.create(XT.Session), setTimeout(_.bind(XT.session.start, XT.session), 0)), a && a instanceof Function && a();
+X.log("Successfully connected to the datasource"), this.isConnected = !0, X.session || (X.session = Object.create(X.Session), setTimeout(_.bind(X.session.start, X.session), 0)), a && a instanceof Function && a();
 },
 reset: function() {
 if (!this.isConnected) return;
@@ -3273,7 +3273,7 @@ a && (a.disconnect(), this.isConnected = !1), this.connect();
 // date.js
 
 (function() {
-"use strict", XT.date = {
+"use strict", X.date = {
 convert: function(a) {
 return a.constructor === Date ? a : a.constructor === Array ? new Date(a[0], a[1], a[2]) : a.constructor === Number ? new Date(a) : a.constructor === String ? new Date(a) : typeof a == "object" ? new Date(a.year, a.month, a.date) : NaN;
 },
@@ -3294,7 +3294,7 @@ return isFinite(a = this.convert(a).valueOf()) && isFinite(b = this.convert(b).v
 // math.js
 
 (function() {
-"use strict", XT.math = {
+"use strict", X.math = {
 add: function(a, b, c) {
 c = c || 0;
 var d = Math.pow(10, c);
@@ -3316,14 +3316,14 @@ return Math.round(a * d - b * d) / d;
 // request.js
 
 (function() {
-"use strict", XT.Request = {
+"use strict", X.Request = {
 send: function(a) {
-var b = XT.session.details, c = XT.dataSource._sock, d = this._notify, e = this._handle, f = {
+var b = X.session.details, c = X.dataSource._sock, d = this._notify, e = this._handle, f = {
 payload: a
 }, g;
 return !!d && d instanceof Function ? g = function(a) {
-d(_.extend(Object.create(XT.Response), a));
-} : g = XT.K, f = _.extend(f, b), XT.log("Socket sending: %@".replace("%@", e), f), c.json.emit(e, f, g), this;
+d(_.extend(Object.create(X.Response), a));
+} : g = X.K, f = _.extend(f, b), X.log("Socket sending: %@".replace("%@", e), f), c.json.emit(e, f, g), this;
 },
 handle: function(a) {
 return this._handle = a, this;
@@ -3340,13 +3340,13 @@ b.unshift(c), a.apply(null, b);
 // response.js
 
 (function() {
-"use strict", XT.Response = {};
+"use strict", X.Response = {};
 })();
 
 // session.js
 
 (function() {
-"use strict", XT.Session = {
+"use strict", X.Session = {
 details: {},
 availableSessions: [],
 privileges: {},
@@ -3359,17 +3359,17 @@ LOCALE: 8,
 ALL: 15,
 loadSessionObjects: function(a, b) {
 var c = this, d, e, f, g, h, i;
-return b && b.success && b.success instanceof Function ? i = b.success : i = XT.K, a === undefined && (a = this.ALL), a & this.PRIVILEGES && (d = b ? _.clone(b) : {}, d.success = function(a) {
+return b && b.success && b.success instanceof Function ? i = b.success : i = X.K, a === undefined && (a = this.ALL), a & this.PRIVILEGES && (d = b ? _.clone(b) : {}, d.success = function(a) {
 e = new Backbone.Model, e.get = function(a) {
 return _.isBoolean(a) ? a : Backbone.Model.prototype.get.call(this, a);
 }, a.forEach(function(a) {
 e.set(a.privilege, a.isGranted);
 }), c.setPrivileges(e), i();
-}, XT.dataSource.dispatch("XT.Session", "privileges", null, d)), a & this.SETTINGS && (f = b ? _.clone(b) : {}, f.success = function(a) {
+}, X.dataSource.dispatch("X.Session", "privileges", null, d)), a & this.SETTINGS && (f = b ? _.clone(b) : {}, f.success = function(a) {
 g = new Backbone.Model, a.forEach(function(a) {
 g.set(a.setting, a.value);
 }), c.setSettings(g), i();
-}, XT.dataSource.dispatch("XT.Session", "settings", null, f)), a & this.SCHEMA && (h = b ? _.clone(b) : {}, h.success = function(a) {
+}, X.dataSource.dispatch("X.Session", "settings", null, f)), a & this.SCHEMA && (h = b ? _.clone(b) : {}, h.success = function(a) {
 var b = new Backbone.Model(a), d, e, f, g;
 c.setSchema(b);
 for (d in b.attributes) if (b.attributes.hasOwnProperty(d)) {
@@ -3389,13 +3389,13 @@ e.prototype.relations.push(f[g]);
 }
 }
 i();
-}, XT.dataSource.dispatch("XT.Session", "schema", "xm", h)), a & this.LOCALE && (XT.lang ? XT.locale.setLanguage(XT.lang) : XT.log("XT.session.loadSessionObjects(): could not find a valid language to load"), i && i instanceof Function && setTimeout(i, 1)), !0;
+}, X.dataSource.dispatch("X.Session", "schema", "xm", h)), a & this.LOCALE && (X.lang ? X.locale.setLanguage(X.lang) : X.log("X.session.loadSessionObjects(): could not find a valid language to load"), i && i instanceof Function && setTimeout(i, 1)), !0;
 },
 selectSession: function(a, b) {
 var c = this, d = function(a) {
 c._didAcquireSession.call(c, a, b);
 };
-XT.Request.handle("session/select").notify(d).send(a);
+X.Request.handle("session/select").notify(d).send(a);
 },
 getAvailableSessions: function() {
 return this.availableSessions;
@@ -3431,26 +3431,26 @@ validateSession: function(a, b) {
 var c = this, d = function(a) {
 c._didValidateSession.call(c, a, b);
 };
-this.details = a, XT.Request.handle("session").notify(d).send(a);
+this.details = a, X.Request.handle("session").notify(d).send(a);
 },
 _didValidateSession: function(a, b) {
 var c = document.location.hostname;
 if (a.code !== 1) return document.location = "https://%@/login".f(c);
-this.setDetails(a.data), XT.getStartupManager().start(), b && b instanceof Function && b(a);
+this.setDetails(a.data), X.getStartupManager().start(), b && b instanceof Function && b(a);
 },
 start: function() {
 var a = enyo.getCookie("xtsessioncookie");
 try {
 a = JSON.parse(a), this.validateSession(a, function() {
-XT.app.show();
+X.app.show();
 });
 } catch (b) {
-XT.Session.logout();
+X.Session.logout();
 }
 },
 logout: function() {
 var a = document.location.hostname;
-XT.Request.handle("function/logout").notify(function() {
+X.Request.handle("function/logout").notify(function() {
 document.location = "https://%@/login".f(a);
 }).send();
 },
@@ -3468,7 +3468,7 @@ DB_UNKNOWN: "X"
 // locale.js
 
 (function() {
-"use strict", XT.locale = {
+"use strict", X.locale = {
 hasStrings: !1,
 strings: {},
 lang: "",
@@ -3502,8 +3502,8 @@ loc: function(a) {
 var b = this.getStrings();
 return b[a] || a.toString();
 }
-}, XT.stringsFor = function(a, b) {
-XT.lang ? console.log("XT.stringsFor(): request to write over current language") : XT.lang = {
+}, X.stringsFor = function(a, b) {
+X.lang ? console.log("X.stringsFor(): request to write over current language") : X.lang = {
 lang: a,
 strings: b
 };
@@ -3512,7 +3512,7 @@ strings: b
 
 // strings.js
 
-XT.stringsFor("en_US", {
+X.stringsFor("en_US", {
 _abbreviation: "Abbreviation",
 _abbreviationLong: "Abbreviation Long",
 _abbreviationShort: "Abbreviation Short",
@@ -3864,35 +3864,35 @@ _recordNotFound: "Record not found.",
 _recordStatusNotEditable: "Record with status of `{status}` is not editable.",
 _recursiveParentDisallowed: "Record is not allowed to reference itself as the parent.",
 _valueExists: "Record with {attr} of '{value}' already exists."
-}), XT.locale.setLanguage(XT.lang);
+}), X.locale.setLanguage(X.lang);
 
 // string.js
 
 _.extend(String.prototype, {
 camelize: function() {
-var a = XT.$A(arguments);
-return XT.String.camelize(this, a);
+var a = X.$A(arguments);
+return X.String.camelize(this, a);
 },
 format: function() {
-var a = XT.$A(arguments);
-return XT.String.format(this, a);
+var a = X.$A(arguments);
+return X.String.format(this, a);
 },
 f: function() {
-var a = XT.$A(arguments);
-return XT.String.format(this, a);
+var a = X.$A(arguments);
+return X.String.format(this, a);
 },
 loc: function() {
-var a = XT.$A(arguments);
-return a.unshift(this), XT.String.loc.apply(XT.String, a);
+var a = X.$A(arguments);
+return a.unshift(this), X.String.loc.apply(X.String, a);
 },
 trim: function() {
-return XT.String.trim(this);
+return X.String.trim(this);
 }
 });
 
 // string.js
 
-XT.String = {
+X.String = {
 camelize: function(a) {
 var b = a.replace(/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g, function(a, b, c) {
 return c ? c.toUpperCase() : "";
@@ -3900,14 +3900,14 @@ return c ? c.toUpperCase() : "";
 return c !== d ? d + b.slice(1) : b;
 },
 loc: function(a) {
-if (!XT.locale) return XT.warn("XT.String.loc(): attempt to localize string but no locale set"), a;
-var b = XT.$A(arguments), c = XT.locale.loc(a);
+if (!X.locale) return X.warn("X.String.loc(): attempt to localize string but no locale set"), a;
+var b = X.$A(arguments), c = X.locale.loc(a);
 b.shift();
 if (!(b.length > 0)) return c;
 try {
-return XT.String.format(c, b);
+return X.String.format(c, b);
 } catch (d) {
-XT.error("could not localize string, %@".f(a), d);
+X.error("could not localize string, %@".f(a), d);
 }
 },
 format: function(a, b) {
@@ -3918,7 +3918,7 @@ for (; c < b.length; ++c) {
 e = b[c];
 if (!e) continue;
 d = typeof e;
-if (d === "object") a = XT.String.replaceKeys(a, e); else {
+if (d === "object") a = X.String.replaceKeys(a, e); else {
 if (d !== "string" && d !== "number") continue;
 a = a.replace(/\%@/, e);
 }
@@ -3941,7 +3941,7 @@ return !!b && b instanceof String ? b.replace(/^\s\s*/, "").replace(/\s\s*$/, ""
 
 (function() {
 "use strict";
-var a = XT.StartupTask = function(a) {
+var a = X.StartupTask = function(a) {
 var b;
 this._properties = {
 taskName: "",
@@ -3950,7 +3950,7 @@ isComplete: !1,
 task: null
 };
 for (b in a) a.hasOwnProperty(b) && (this._properties[b] = a[b]);
-(!this.get("taskName") || this.get("taskName") === "") && this.set("taskName", _.uniqueId("xt_task_")), XT.getStartupManager().registerTask(this);
+(!this.get("taskName") || this.get("taskName") === "") && this.set("taskName", _.uniqueId("xt_task_")), X.getStartupManager().registerTask(this);
 };
 a.prototype.get = function(a) {
 var b = this._properties, c = b[a];
@@ -3970,14 +3970,14 @@ if (this.get("isComplete")) return !0;
 var a = this.get("task");
 return !!a && a instanceof Function ? this.get("waitingList").length > 0 ? !1 : (a.call(this), !0) : (this.error("Could not execute without an actual task"), !1);
 }, a.prototype.didComplete = function() {
-this.set("isComplete", !0), XT.getStartupManager().taskDidComplete(this);
+this.set("isComplete", !0), X.getStartupManager().taskDidComplete(this);
 }, a.create = function(a) {
-return new XT.StartupTask(a);
+return new X.StartupTask(a);
 };
 })(), function() {
 "use strict";
-var a = XT.StartupTaskManager = function() {
-XT.getStartupManager = _.bind(function() {
+var a = X.StartupTaskManager = function() {
+X.getStartupManager = _.bind(function() {
 return this;
 }, this), this._properties = {
 queue: [],
@@ -4022,7 +4022,7 @@ b.push(a);
 }, a.prototype.allDone = function() {
 var a = this.get("callbacks") || [], b;
 while (a.length > 0) b = a.shift(), b && b instanceof Function && b();
-}, b = new XT.StartupTaskManager;
+}, b = new X.StartupTaskManager;
 }();
 
 // app.js
