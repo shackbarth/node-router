@@ -1,2 +1,3 @@
 node_modules
 test/steves_test.js
+*.swp
