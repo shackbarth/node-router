@@ -8,7 +8,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   require("xt");
-  
+
   X.setup({
     autoStart: true,
     requireCache: true,
@@ -28,6 +28,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         port: 27017,
         schemaDirectory: "./mongo_schemas/users",
         database: "xtusers"
+      },
+      dictionary: {
+        hostname: "localhost",
+        port: 27017,
+        schemaDirectory: "./mongo_schemas/linguist",
+        database: "xtling"
       }
     },
     proxy: {
@@ -35,10 +41,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     administratorInterface: {
       port: 9090
+    },
+    linguistInterface: {
+      port: 9097
     }
   });
 
   require("./lib/proxy_cache");
   require("./lib/proxy_service");
   require("./lib/administravia");
+  require("./lib/lingavia");
 }());
