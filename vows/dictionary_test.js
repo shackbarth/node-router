@@ -87,7 +87,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     },
 
-    'after a dictionary instance is saved': {
+    'after a test dictionary instance is saved': {
       topic: function () {
         var seed = {
           "lexicon": [],
@@ -95,7 +95,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           "languageVersion": 1,
           "xTupleVersion": "4.0"
         };
-        var jsonData = {languageName: "French", xTupleVersion: "4.0"},
+        var jsonData = {
+          languageName: "French",
+          xTupleVersion: "4.0",
+          lexicon: [
+            {key: "_order", translation: "Ordre", translator: "Seed"},
+            {key: "_number", translation: "", translator: "Seed"}
+          ]
+        },
           jsonFunction = function () { return jsonData; },
           xtr = {
             json: jsonFunction,
@@ -103,35 +110,65 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             errorLog: '',
             write: function (data) { this.written += data; },
             written: ''
-          };
-        X.dictionaryRoute.testSave(xtr, this.callback);
-        //var instance = dictionaryUtils.jsonToDictionaryInstance(seed);
-        //instance.save(this.callback);
+          },
+
+          DictionaryModel = X.dictionaryCache.model("Dictionary"),
+          dictionaryInstance = new DictionaryModel();
+
+        DictionaryModel.find({}).remove(); // clear out collection
+        // still figuring out where to do this kind of stuff if vows
+
+        dictionaryInstance.lexicon = xtr.json().lexicon;
+        dictionaryInstance.xTupleVersion = xtr.json().xTupleVersion;
+        dictionaryInstance.languageName = xtr.json().languageName;
+        dictionaryInstance.languageVersion = 1;
+        dictionaryInstance.save(this.callback);
       },
 
       'I can submit a valid update': {
         topic: function (dictionary) {
           // monkeypatch xtr
-          var jsonData = {languageName: "French", xTupleVersion: "4.0"},
+          var jsonData = {
+            languageName: "French",
+            xTupleVersion: "4.0",
+            lexicon: [
+              {key: "_order", translation: "Ordre"},
+              {key: "_number", translation: "Nombre"}
+            ]
+          },
             jsonFunction = function () { return jsonData; },
             xtr = {
               json: jsonFunction,
               error: function (error) { this.errorLog += error.reason; },
               errorLog: '',
               write: function (data) {
-                this.written += data;
+                this.written = data;
                 return {close: function () {}};
               },
-              written: ''
+              written: null
             };
 
           X.dictionaryRoute.save(xtr, this.callback);
         },
 
-        'and when I do I get somewhere at least': function (error, result) {
-          assert.isNull(error);
-          assert.equal(result.errorLog, '');
-          assert.notEqual(result.written.length, 0);
+        'then we merge the dictionaries such that': {
+          'no error occurs': function (topic) {
+            assert.equal(topic.errorLog, '');
+            assert.isNotNull(topic.written);
+          },
+          'the lexicon keeps the unchanged translations with the old name but updates the new': function (topic) {
+            var lexicon = topic.written.lexicon,
+              order = X._.find(lexicon, function (entry) { return entry.key === '_order'; }),
+              number = X._.find(lexicon, function (entry) { return entry.key === '_number'; });
+
+            assert.equal(order.translator, 'Seed');
+            assert.equal(order.translation, 'Ordre');
+            assert.equal(number.translator, 'TranslatorNameFromSession');
+            assert.equal(number.translation, 'Nombre');
+          },
+          'the language version has been incremented': function (topic) {
+            assert.equal(topic.written.languageVersion, 2);
+          }
         }
       }
     },
